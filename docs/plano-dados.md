@@ -10,10 +10,14 @@ Criar um projeto Supabase exclusivo para o hack, separado do Nexus comercial. Us
 
 A migração precisa ser explícita, após autenticação: comparar bens e metas de origem e destino, informar conflitos, pedir confirmação antes de substituir dados, e manter a cópia local até conferência. A migração não deve presumir que dados do navegador são fictícios. Não coletar ou publicar dados pessoais reais de terceiros na demo do hack.
 
-Não executar migrations nem conectar em um projeto existente sem verificar que é o projeto separado escolhido para esta aplicação. A demonstração pública deve continuar funcionando com dados sintéticos, inclusive sem acesso de escrita a dados de usuários reais.
+Não executar migrations nem conectar em um projeto existente sem verificar que é o projeto separado escolhido para esta aplicação. Para a demonstração pública, fornecer ao júri acesso de teste com dados sintéticos, sem acesso a dados de usuários reais.
 
 ## Executar localmente
 
 Requisitos: Docker em execução e dependências instaladas com `pnpm install`. O projeto usa Supabase CLI com stack experimental e rede Docker `nexus-hack-local`, configurada para vincular portas em 127.0.0.1. Na primeira execução em outra máquina, crie a rede com `docker network create -o com.docker.network.bridge.host_binding_ipv4=127.0.0.1 nexus-hack-local`; em seguida execute `pnpm supabase:start`. Use `pnpm supabase:stop` para parar; não execute `db reset` sobre dados que queira preservar. Não compartilhe a saída de comandos que exponham credenciais locais.
 
 A aplicação não grava novos dados patrimoniais no navegador. Após login carrega os dados do banco; alterações são salvas automaticamente. A restauração de JSON exige conta e confirmação e grava diretamente no banco. Há proteção contra sobrescrita em caso de alterações simultâneas em outra sessão; conflitos exigem ação do usuário. Dados das versões anteriores são preservados até que uma cópia idêntica seja confirmada no banco; a autenticação pode manter dados de sessão no navegador. Os exemplos públicos do banco são fictícios e somente leitura; restaurar o exemplo carrega o registro público. As portas locais podem mudar. A nuvem e a demo pública precisam de configuração independente, dados sintéticos e validação antes da avaliação.
+
+## Histórico de versões
+
+A migration `202611090003_historico.sql` cria um histórico privado com até 20 versões confirmadas por conta (limite atualizado pela migration `202611090004_limitar_historico.sql`) e cria uma referência do estado existente na ativação. Escritas e leitura entre contas e acesso anônimo foram verificados em uma transação de teste. O histórico não recupera dados anteriores à ativação e não substitui cópia externa. Restaurar uma versão exige confirmação explícita e salva uma nova versão.

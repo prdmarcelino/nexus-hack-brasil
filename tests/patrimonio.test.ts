@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { total, porCategoria, atualizarBem, ultimaVariacao, mesesParaMeta, type Bem } from "../lib/patrimonio";
+import { total, porCategoria, atualizarBem, ultimaVariacao, mesesParaMeta, avaliacaoAntiga, type Bem } from "../lib/patrimonio";
 
 test("soma valores e distribui categorias sem duplicar bens", () => {
  const bens: Bem[] = [
@@ -33,4 +33,14 @@ test("estima meses sem rendimento, arredondando para cima", () => {
  assert.equal(mesesParaMeta(500, 1000, 0), null);
  assert.equal(mesesParaMeta(0, 1000, -1), null);
  assert.equal(mesesParaMeta(0.1, 0.3, 0.1), 2);
+});
+
+
+test("identifica avaliações com pelo menos um ano usando datas de calendário", () => {
+ assert.equal(avaliacaoAntiga("2025-11-09", "2026-11-09"), true);
+ assert.equal(avaliacaoAntiga("2025-11-10", "2026-11-09"), false);
+ assert.equal(avaliacaoAntiga("2027-01-01", "2026-11-09"), false);
+ assert.equal(avaliacaoAntiga("2025-02-28", "2026-02-28"), true);
+ assert.equal(avaliacaoAntiga("2023-02-28", "2024-02-29"), true);
+ assert.equal(avaliacaoAntiga("2025-02-30", "2026-03-01"), false);
 });

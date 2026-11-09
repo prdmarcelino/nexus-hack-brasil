@@ -4,7 +4,7 @@ Este projeto parte de uma ideia de produto anterior. A implementação da entreg
 
 ## Dependências e materiais
 
-As dependências instaladas, incluindo Next.js, React, lucide-react e Supabase, constam em `package.json` e suas versões exatas em `pnpm-lock.yaml`. Elas são distribuídas sob suas respectivas licenças; é necessária uma revisão de licenças e obrigações antes da submissão. Se código aberto preexistente for copiado conforme a exceção do regulamento, registrar também sua origem na mensagem do commit e não importar histórico anterior.
+As dependências instaladas, incluindo Next.js, React, lucide-react e Supabase, constam em `package.json` e suas versões exatas em `pnpm-lock.yaml`. Elas são distribuídas sob suas respectivas licenças; é necessária uma revisão de licenças e obrigações antes da submissão. Uma consulta local em 9/11/2026 com `pnpm licenses list --prod --json` listou identificadores 0BSD, Apache-2.0, BSD-3-Clause, CC-BY-4.0, ISC, MIT e `Apache-2.0 AND LGPL-3.0-or-later` para `@img/sharp-win32-x64`. A lista varia conforme plataforma e dependências instaladas; ela não conclui a análise jurídica nem substitui a verificação da distribuição efetiva. O componente libvips e suas licenças constam dos [avisos oficiais](https://github.com/lovell/sharp-libvips/blob/main/THIRD-PARTY-NOTICES.md). Se código aberto preexistente for copiado conforme a exceção do regulamento, registrar também sua origem na mensagem do commit e não importar histórico anterior.
 
 ## Licença da entrega
 

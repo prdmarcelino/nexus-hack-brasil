@@ -2,13 +2,13 @@
 import { createContext, useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
-import { exemplo, type Bem } from "../lib/patrimonio";
-import { metasExemplo, type Meta } from "../lib/metas";
+import type { Bem } from "../lib/patrimonio";
+import type { Meta } from "../lib/metas";
 import { lerBackup } from "../lib/backup";
 import { assinaturaDados } from "../lib/dados";
 type Dados = { bens: Bem[]; metas: Meta[]; tranquila: boolean };
 type Estado = "salvo" | "aguardando" | "salvando" | "erro" | "conflito";
-type Contexto = Dados & { setBens: Dispatch<SetStateAction<Bem[]>>; setMetas: Dispatch<SetStateAction<Meta[]>>; setTranquila: Dispatch<SetStateAction<boolean>>; sessao: Session | null; pronto: boolean; erroDados: string; alterado: boolean; estado: Estado; tentarNovamente: () => void; revisaoLegado: number; };
+type Contexto = Dados & { setBens: Dispatch<SetStateAction<Bem[]>>; setMetas: Dispatch<SetStateAction<Meta[]>>; setTranquila: Dispatch<SetStateAction<boolean>>; sessao: Session | null; pronto: boolean; erroDados: string; alterado: boolean; visitanteAlterado: boolean; temRegistro: boolean; estado: Estado; tentarNovamente: () => void; revisaoLegado: number; };
 const DadosContext = createContext<Contexto | null>(null);
 const assinar = (d: Dados) => assinaturaDados({bens:d.bens,metas:d.metas,tranquila:d.tranquila});
 function validar(d: {bens:unknown;metas:unknown;visao_tranquila:unknown}): Dados { return lerBackup(JSON.stringify({formato:"nexus-club-backup",versao:1,dados:{bens:d.bens,metas:d.metas,tranquila:d.visao_tranquila}})); }
@@ -19,14 +19,15 @@ export function DadosProvider({children}:{children:React.ReactNode}) {
  const [sessao,setSessao]=useState<Session|null>(null); const [resolvido,setResolvido]=useState(false);
  const [bens,setBens]=useState<Bem[]>([]); const [metas,setMetas]=useState<Meta[]>([]); const [tranquila,setTranquila]=useState(true);
  const [identidadeCarregada,setIdentidadeCarregada]=useState<string|null>(null); const [referencia,setReferencia]=useState(""); const [erroDados,setErroDados]=useState("");
- const [estado,setEstado]=useState<Estado>("salvo"); const [revisaoLegado,setRevisaoLegado]=useState(0);
+ const [temRegistro,setTemRegistro]=useState(false); const [estado,setEstado]=useState<Estado>("salvo"); const [revisaoLegado,setRevisaoLegado]=useState(0);
  const versao = useRef<string|null>(null); const emCurso = useRef(false); const geracao = useRef(0);
+ const referenciaAtual = useRef(""); const assinaturaAtual = useRef(""); const canal = useRef<BroadcastChannel | null>(null);
  const identidade = resolvido ? sessao?.user.id ?? "visitante" : null;
  useEffect(() => { if (!supabase) { setResolvido(true); return; } const {data}=supabase.auth.onAuthStateChange((_evento,s)=>{setSessao(s);setResolvido(true)}); return ()=>data.subscription.unsubscribe(); },[]);
  useEffect(() => {
-  if (!identidade) return; const atual=++geracao.current; setIdentidadeCarregada(null);setErroDados("");setEstado("salvo");versao.current=null;emCurso.current=false;
-  function aplicar(d:Dados, v:string|null) { if(atual!==geracao.current)return; setBens(d.bens);setMetas(d.metas);setTranquila(d.tranquila);setReferencia(assinar(d));versao.current=v;setIdentidadeCarregada(identidade); }
-  if (identidade==="visitante") { aplicar({bens:exemplo,metas:metasExemplo,tranquila:true},null); return; }
+  if (!identidade) return; const atual=++geracao.current; setIdentidadeCarregada(null);setErroDados("");setEstado("salvo");setTemRegistro(false);versao.current=null;emCurso.current=false;
+  function aplicar(d:Dados, v:string|null) { if(atual!==geracao.current)return; setBens(d.bens);setMetas(d.metas);setTranquila(d.tranquila);setReferencia(assinar(d));versao.current=v;setTemRegistro(v !== null);setIdentidadeCarregada(identidade); }
+  if (identidade==="visitante") { aplicar({bens:[],metas:[],tranquila:true},null); return; }
   if (!supabase) { setErroDados("Banco não configurado.");setIdentidadeCarregada(identidade);return; }
   Promise.resolve(supabase.from("patrimonio_usuario").select("bens,metas,visao_tranquila,atualizado_em").eq("usuario_id",identidade).maybeSingle()).then(({data,error})=>{
    if(atual!==geracao.current)return;
@@ -37,8 +38,33 @@ export function DadosProvider({children}:{children:React.ReactNode}) {
  },[identidade]);
  const pronto=!!identidade && identidadeCarregada===identidade;
  const atual:Dados={bens,metas,tranquila}; const assinatura=assinar(atual);
+ referenciaAtual.current=referencia; assinaturaAtual.current=assinatura;
  const alterado=pronto && !!sessao && !erroDados && assinatura!==referencia;
- useEffect(()=>{if(!alterado && estado!=="salvando")return; const aviso=(evento:BeforeUnloadEvent)=>{evento.preventDefault()};window.addEventListener("beforeunload",aviso);return()=>window.removeEventListener("beforeunload",aviso)},[alterado,estado]);
+ const visitanteAlterado=pronto && !sessao && assinatura!==referencia;
+ useEffect(()=>{
+  if(!pronto || !sessao || !supabase || erroDados) return;
+  const id=sessao.user.id; const inicio=geracao.current;
+  let ativa=true; let consultando=false;
+  const instancia=typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("nexus-club-atualizacoes-v1") : null;
+  canal.current=instancia;
+  async function verificar() {
+   if(!ativa || consultando || !supabase) return;
+   consultando=true;
+   try {
+    const {data,error}=await supabase.from("patrimonio_usuario").select("bens,metas,visao_tranquila,atualizado_em").eq("usuario_id",id).maybeSingle();
+    if(!ativa || inicio!==geracao.current || error || !data || data.atualizado_em===versao.current) return;
+    if(emCurso.current || assinaturaAtual.current!==referenciaAtual.current) { setEstado("conflito"); return; }
+    const dados=validar(data); const assinaturaRecebida=assinar(dados);
+    setBens(dados.bens); setMetas(dados.metas); setTranquila(dados.tranquila); setReferencia(assinaturaRecebida); versao.current=data.atualizado_em; setTemRegistro(true); setEstado("salvo");
+   } catch { /* A próxima consulta ou alteração poderá tentar novamente. */ }
+   finally { consultando=false; }
+  }
+  if(instancia) instancia.onmessage=evento=>{if(evento.data?.usuarioId===id) void verificar()};
+  const aoVoltar=()=>{if(document.visibilityState==="visible") void verificar()};
+  document.addEventListener("visibilitychange",aoVoltar);
+  return ()=>{ativa=false;document.removeEventListener("visibilitychange",aoVoltar);if(instancia)instancia.close();if(canal.current===instancia)canal.current=null};
+ },[pronto,sessao?.user.id,erroDados]);
+ useEffect(()=>{if(!alterado && !visitanteAlterado && estado!=="salvando")return; const aviso=(evento:BeforeUnloadEvent)=>{evento.preventDefault()};window.addEventListener("beforeunload",aviso);return()=>window.removeEventListener("beforeunload",aviso)},[alterado,visitanteAlterado,estado]);
  useEffect(()=>{
   if(!pronto || !sessao || erroDados || !alterado || estado==="erro" || estado==="conflito" || emCurso.current || !supabase)return;
   const id=sessao.user.id; const inicio=geracao.current; const snapshot:Dados={bens,metas,tranquila}; const assinaturaEnviada=assinar(snapshot);
@@ -52,16 +78,23 @@ export function DadosProvider({children}:{children:React.ReactNode}) {
      ? await supabase.from("patrimonio_usuario").insert(payload).select("bens,metas,visao_tranquila,atualizado_em").single()
      : await supabase.from("patrimonio_usuario").update(payload).eq("usuario_id",id).eq("atualizado_em",versao.current).select("bens,metas,visao_tranquila,atualizado_em").maybeSingle();
     if(inicio!==geracao.current)return;
-    if(resultado.error){setEstado(resultado.error.code==="23505" ? "conflito" : "erro");return;}
-    if(!resultado.data){setEstado("conflito");return;}
-    const confirmado=validar(resultado.data); if(assinar(confirmado)!==assinaturaEnviada) {setEstado("erro");return;}
-    versao.current=resultado.data.atualizado_em; setReferencia(assinaturaEnviada); limparAntigos(id,confirmado);setRevisaoLegado(v=>v+1);setEstado("salvo");
+    if(resultado.error && resultado.error.code!=="23505"){setEstado("erro");return;}
+    let registro = resultado.data;
+    if(!registro) {
+     const consulta = await supabase.from("patrimonio_usuario").select("bens,metas,visao_tranquila,atualizado_em").eq("usuario_id",id).maybeSingle();
+     if(inicio!==geracao.current)return;
+     if(consulta.error){setEstado("erro");return;}
+     if(!consulta.data || assinar(validar(consulta.data))!==assinaturaEnviada){setEstado("conflito");return;}
+     registro=consulta.data;
+    }
+    const confirmado=validar(registro); if(assinar(confirmado)!==assinaturaEnviada) {setEstado("erro");return;}
+    versao.current=registro.atualizado_em; setTemRegistro(true); setReferencia(assinaturaEnviada); limparAntigos(id,confirmado);setRevisaoLegado(v=>v+1);setEstado("salvo"); canal.current?.postMessage({usuarioId:id});
    } catch { if(inicio===geracao.current)setEstado("erro"); }
    finally { if(inicio===geracao.current)emCurso.current=false; }
   },700);
   return ()=>clearTimeout(timer);
  },[pronto,sessao?.user.id,erroDados,alterado,assinatura,referencia,estado]);
  function tentarNovamente(){if(estado==="erro")setEstado("salvo")}
- return <DadosContext.Provider value={{bens,metas,tranquila,setBens,setMetas,setTranquila,sessao,pronto,erroDados,alterado,estado,tentarNovamente,revisaoLegado}}>{children}</DadosContext.Provider>;
+ return <DadosContext.Provider value={{bens,metas,tranquila,setBens,setMetas,setTranquila,sessao,pronto,erroDados,alterado,visitanteAlterado,temRegistro,estado,tentarNovamente,revisaoLegado}}>{children}</DadosContext.Provider>;
 }
 export function useDados(){const c=useContext(DadosContext);if(!c)throw new Error("DadosProvider ausente");return c}

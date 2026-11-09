@@ -2,7 +2,7 @@
 
 Protótipo web para a trilha 05 — Pagamentos e finanças — do Hack Brasil 2026. A proposta é ajudar pessoas a acompanhar diferentes tipos de patrimônio com uma experiência tranquila, adequada a quem prefere não acompanhar as oscilações diárias do mercado.
 
-**Estado:** protótipo local. Com login, o patrimônio é carregado do Supabase local e as alterações são salvas automaticamente no banco local, com indicador de estado e detecção de conflitos. Sem login, a demonstração usa dados fictícios em memória. Uma cópia JSON pode ser baixada e restaurada diretamente no banco da conta, mediante confirmação. Dados anteriores no navegador são removidos apenas quando idênticos a dados confirmados no banco; outras cópias antigas são preservadas. Não há cotações nem recomendações de investimento.
+**Estado:** protótipo local. Com login, o patrimônio é carregado do Supabase local e as alterações são salvas automaticamente no banco local, com indicador de estado e detecção de conflitos. O banco local mantém até 20 versões confirmadas, acessíveis pelo proprietário em Conta. O acesso à interface exige login; contas novas começam vazias e podem carregar exemplos fictícios na página Conta. Uma cópia JSON pode ser baixada e restaurada diretamente no banco da conta, mediante confirmação. Dados anteriores no navegador são removidos apenas quando idênticos a dados confirmados no banco; outras cópias antigas são preservadas. Não há cotações nem recomendações de investimento.
 
 ## Documentação
 
@@ -11,6 +11,7 @@ Protótipo web para a trilha 05 — Pagamentos e finanças — do Hack Brasil 20
 - [Arquitetura proposta](docs/arquitetura.md)
 - [Regras e prazos do Hack](docs/regras-hack.md)
 - [Origem e licenças](docs/origem-e-licencas.md)
+- [Preparação para publicação e avaliação](docs/plano-publicacao-hack.md)
 
 ## Executar localmente
 
