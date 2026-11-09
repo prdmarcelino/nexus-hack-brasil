@@ -12,6 +12,8 @@ Protótipo web para a trilha 05 — Pagamentos e finanças — do Hack Brasil 20
 - [Regras e prazos do Hack](docs/regras-hack.md)
 - [Origem e licenças](docs/origem-e-licencas.md)
 - [Preparação para publicação e avaliação](docs/plano-publicacao-hack.md)
+- [Rascunho da submissão](docs/rascunho-submissao-hack.md)
+- [Roteiro do vídeo](docs/roteiro-video-hack.md)
 
 ## Executar localmente
 
