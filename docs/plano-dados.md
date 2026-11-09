@@ -4,9 +4,9 @@ Estado: a aplicação conecta-se ao Supabase local e carrega dados após o login
 
 ## Próxima etapa
 
-A migration inicial proposta está em `supabase/migrations/202611090001_patrimonio.sql`: um registro por usuário, com bens e metas em JSON e RLS por usuário. Ela foi aplicada no banco local separado. Foram feitos testes transacionais de leitura e escrita isoladas entre dois usuários e verificação de ausência de SELECT para anon; nada foi aplicado na nuvem. O formato é adequado ao protótipo, mas não garante validação completa dos dados ou resolução de conflitos entre dispositivos.
+A migration inicial proposta está em `supabase/migrations/202611090001_patrimonio.sql`: um registro por usuário, com bens e metas em JSON e RLS por usuário. Ela foi aplicada no banco local separado. Foram feitos testes transacionais de leitura e escrita isoladas entre dois usuários e verificação de ausência de SELECT para anon; as quatro migrations também foram aplicadas ao projeto separado na nuvem em 9/11/2026. O formato é adequado ao protótipo, mas não garante validação completa dos dados ou resolução de conflitos entre dispositivos.
 
-Criar um projeto Supabase exclusivo para o hack, separado do Nexus comercial. Usar autenticação, PostgreSQL e políticas por usuário. Antes de migrar dados: modelar e versionar o schema, habilitar RLS e permissões mínimas, testar acesso permitido do proprietário e acesso negado entre contas e sem login, e revisar riscos e privacidade. Nunca expor chaves privilegiadas no navegador ou no repositório.
+O projeto Supabase exclusivo para o hack foi criado pelo titular, separado do Nexus comercial, com PostgreSQL e políticas por usuário. A conexão da aplicação hospedada e a autenticação na nuvem ainda precisam ser validadas. Antes de migrar dados: modelar e versionar o schema, habilitar RLS e permissões mínimas, testar acesso permitido do proprietário e acesso negado entre contas e sem login, e revisar riscos e privacidade. Nunca expor chaves privilegiadas no navegador ou no repositório.
 
 A migração precisa ser explícita, após autenticação: comparar bens e metas de origem e destino, informar conflitos, pedir confirmação antes de substituir dados, e manter a cópia local até conferência. A migração não deve presumir que dados do navegador são fictícios. Não coletar ou publicar dados pessoais reais de terceiros na demo do hack.
 
@@ -21,3 +21,7 @@ A aplicação não grava novos dados patrimoniais no navegador. Após login carr
 ## Histórico de versões
 
 A migration `202611090003_historico.sql` cria um histórico privado com até 20 versões confirmadas por conta (limite atualizado pela migration `202611090004_limitar_historico.sql`) e cria uma referência do estado existente na ativação. Escritas e leitura entre contas e acesso anônimo foram verificados em uma transação de teste. O histórico não recupera dados anteriores à ativação e não substitui cópia externa. Restaurar uma versão exige confirmação explícita e salva uma nova versão.
+
+## Verificação do projeto hospedado
+
+Em 9/11/2026, as quatro migrations foram aplicadas com a CLI, com conferência posterior do histórico. RLS estava ativa nas três tabelas; testes transacionais com duas identidades fictícias validaram isolamento de dados e histórico; acesso anônimo às tabelas privadas foi negado e o exemplo público respondeu em modo somente leitura. Nenhum dado de usuário local foi transferido. A verificação é pontual e não substitui testes da aplicação implantada.
