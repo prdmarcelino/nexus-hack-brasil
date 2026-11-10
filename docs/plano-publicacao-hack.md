@@ -2,6 +2,15 @@
 
 Atualizado em 9/11/2026. Consulte [regulamento oficial](https://hackbrasil.com/regulamento) e painel do evento antes da submissão.
 
+## Cronograma interno definido pelo responsável
+
+- **Até 20/11/2026:** concluir as melhorias e testes locais de patrimônio, metas e demais partes da aplicação. A versão para avaliação deve estar pronta para publicação.
+- **De 20/11 a 28/11/2026:** publicar e validar a aplicação na nuvem, incluindo acesso do júri, dados fictícios e funcionamento dos fluxos. O desenvolvimento de melhorias fica encerrado em 20/11; alterações no código após esse marco ficam restritas à correção de bugs graves. Problemas de infraestrutura ou configuração devem ser tratados nessa janela, respeitando essa restrição para mudanças no código.
+- **Até 28/11/2026:** concluir as verificações da aplicação hospedada e preparar a submissão, o vídeo e os links para avaliação. Qualquer correção grave deve ser verificada antes da entrega.
+- **Prazo externo registrado:** submissão até 30/11/2026 às 23h59, horário de Brasília. O cronograma interno antecipa a preparação; não substitui o envio formal pelo painel. Reconfirmar datas e exigências no regulamento e no painel do evento.
+
+O regulamento registrado prevê regras adicionais de congelamento do repositório para finalistas após o fim das submissões. Consultar a organização sobre correções urgentes durante esse período.
+
 ## Situação
 
 - A aplicação funciona localmente com Supabase em Docker. O projeto Supabase hospedado separado foi criado e recebeu as quatro migrations em 9/11/2026; não recebeu dados pessoais nem cópia do banco local. A aplicação web pública ainda não foi implantada.

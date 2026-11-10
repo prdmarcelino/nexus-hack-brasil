@@ -32,18 +32,25 @@ export function mesesParaMeta(atual: number, alvo: number, aporteMensal: number)
   return aporteEmCentavos > 0 ? Math.ceil(restanteEmCentavos / aporteEmCentavos) : null;
 }
 
-/** Verifica se a data informada é anterior ou igual ao aniversário de um ano. */
-export function avaliacaoAntiga(data: string, hoje: string): boolean {
- const parse = (valor: string): Date | null => {
+function parseData(valor: string): Date | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(valor)) return null;
   const [ano, mes, dia] = valor.split("-").map(Number);
   const resultado = new Date(Date.UTC(ano, mes - 1, dia));
   return resultado.getUTCFullYear() === ano && resultado.getUTCMonth() === mes - 1 && resultado.getUTCDate() === dia ? resultado : null;
- };
- const avaliada = parse(data); const atual = parse(hoje);
+}
+export function dataValida(data: string): boolean { return parseData(data) !== null; }
+
+/** Verifica se a data informada é anterior ou igual ao aniversário de um ano. */
+export function avaliacaoAntiga(data: string, hoje: string): boolean {
+ const avaliada = parseData(data); const atual = parseData(hoje);
  if (!avaliada || !atual) return false;
  const anoAnterior = atual.getUTCFullYear() - 1; const mes = atual.getUTCMonth();
  const ultimoDia = new Date(Date.UTC(anoAnterior, mes + 1, 0)).getUTCDate();
  const limite = new Date(Date.UTC(anoAnterior, mes, Math.min(atual.getUTCDate(), ultimoDia)));
  return avaliada.getTime() <= limite.getTime();
+}
+
+/** Lista primeiro as avaliações mais antigas, sem alterar a ordem dos bens cadastrados. */
+export function bensParaRevisao(bens: Bem[], hoje: string): Bem[] {
+ return bens.filter(bem => avaliacaoAntiga(bem.data, hoje)).sort((a, b) => a.data.localeCompare(b.data));
 }

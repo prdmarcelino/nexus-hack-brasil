@@ -1,11 +1,11 @@
 # Escopo inicial — proposta
 
-A confirmar durante o desenvolvimento:
+Escopo implementado no protótipo local:
 
-1. Abrir uma demo com patrimônio fictício e cadastro manual de diferentes categorias de bens.
+1. Entrar em uma conta, carregar exemplos fictícios pela página Conta e cadastrar diferentes categorias de bens manualmente.
 2. Exibir valores totais e composição, indicando data e natureza estimada das avaliações.
 3. Permitir escolher uma visão tranquila e acessar detalhes quando desejado.
-4. Mostrar uma meta simples e uma simulação com premissas explícitas, se couber no prazo.
-5. Disponibilizar uma aplicação responsiva, roteiro de uso, testes dos cálculos e vídeo de até três minutos.
+4. Criar metas com valores destinados por bem e simular prazo com aportes mensais, sem rendimentos.
+5. Disponibilizar interface responsiva, roteiro de uso e testes dos cálculos. O vídeo de até três minutos ainda precisa ser produzido.
 
-Ficam para avaliação posterior: integração com bancos e corretoras, cotações automáticas, autenticação, sincronização entre dispositivos, impostos, pagamento e assinatura. Nenhum desses itens está implementado ou prometido.
+A autenticação e o salvamento no Supabase estão implementados e foram testados localmente; a aplicação hospedada ainda precisa ser implantada e validada. Integração com bancos e corretoras, cotações automáticas, impostos, pagamento e assinatura não estão implementados.

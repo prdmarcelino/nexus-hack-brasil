@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { total, porCategoria, atualizarBem, ultimaVariacao, mesesParaMeta, avaliacaoAntiga, type Bem } from "../lib/patrimonio";
+import { total, porCategoria, atualizarBem, ultimaVariacao, mesesParaMeta, avaliacaoAntiga, bensParaRevisao, type Bem } from "../lib/patrimonio";
 
 test("soma valores e distribui categorias sem duplicar bens", () => {
  const bens: Bem[] = [
@@ -43,4 +43,15 @@ test("identifica avaliações com pelo menos um ano usando datas de calendário"
  assert.equal(avaliacaoAntiga("2025-02-28", "2026-02-28"), true);
  assert.equal(avaliacaoAntiga("2023-02-28", "2024-02-29"), true);
  assert.equal(avaliacaoAntiga("2025-02-30", "2026-03-01"), false);
+});
+
+test("lista avaliações antigas em ordem de data sem alterar os bens", () => {
+ const bens: Bem[] = [
+  {id:"1",nome:"Primeiro",categoria:"Imóveis",valor:100,data:"2025-11-10"},
+  {id:"2",nome:"Mais antigo",categoria:"Outros bens",valor:100,data:"2023-01-01"},
+  {id:"3",nome:"Recente",categoria:"Investimentos",valor:100,data:"2026-01-01"},
+ ];
+ assert.deepEqual(bensParaRevisao(bens, "2026-11-10").map(b => b.id), ["2", "1"]);
+ assert.deepEqual(bens.map(b => b.id), ["1", "2", "3"]);
+ assert.deepEqual(bensParaRevisao(bens, "inválida"), []);
 });

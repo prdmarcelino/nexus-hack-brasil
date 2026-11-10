@@ -1,4 +1,4 @@
-import { categorias, type Bem } from "./patrimonio";
+import { categorias, dataValida, type Bem } from "./patrimonio";
 import type { Meta } from "./metas";
 type Dados = { bens: Bem[]; metas: Meta[]; tranquila: boolean };
 export function lerBackup(texto: string): Dados {
@@ -7,9 +7,9 @@ export function lerBackup(texto: string): Dados {
  if (arquivo?.formato !== "nexus-club-backup" || arquivo?.versao !== 1 || !d || !Array.isArray(d.bens) || !Array.isArray(d.metas) || typeof d.tranquila !== "boolean") throw new Error("Formato de cópia inválido ou não reconhecido.");
  const ids = new Set<string>();
  for (const b of d.bens) {
-  if (!b || typeof b.id !== "string" || !b.id || ids.has(b.id) || typeof b.nome !== "string" || !b.nome.trim() || !categorias.includes(b.categoria) || typeof b.valor !== "number" || !Number.isFinite(b.valor) || b.valor <= 0 || typeof b.data !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(b.data) || Number.isNaN(Date.parse(b.data))) throw new Error("A cópia contém um bem inválido.");
+  if (!b || typeof b.id !== "string" || !b.id || ids.has(b.id) || typeof b.nome !== "string" || !b.nome.trim() || !categorias.includes(b.categoria) || typeof b.valor !== "number" || !Number.isFinite(b.valor) || b.valor <= 0 || typeof b.data !== "string" || !dataValida(b.data)) throw new Error("A cópia contém um bem inválido.");
   ids.add(b.id);
-  if (b.historico !== undefined && (!Array.isArray(b.historico) || !b.historico.every((a: { valor: number; data: string }) => typeof a?.valor === "number" && Number.isFinite(a.valor) && a.valor > 0 && typeof a.data === "string" && /^\d{4}-\d{2}-\d{2}$/.test(a.data) && !Number.isNaN(Date.parse(a.data))))) throw new Error("A cópia contém um histórico inválido.");
+  if (b.historico !== undefined && (!Array.isArray(b.historico) || !b.historico.every((a: { valor: number; data: string }) => typeof a?.valor === "number" && Number.isFinite(a.valor) && a.valor > 0 && typeof a.data === "string" && dataValida(a.data)))) throw new Error("A cópia contém um histórico inválido.");
  }
  const idsMetas = new Set<string>();
  for (const m of d.metas) {
