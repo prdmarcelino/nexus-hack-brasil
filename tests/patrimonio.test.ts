@@ -14,6 +14,17 @@ test("soma valores e distribui categorias sem duplicar bens", () => {
  assert.deepEqual(porCategoria([]), []);
 });
 
+test("soma e compara valores monetários em centavos", () => {
+ const bens: Bem[] = [
+  { id: "1", nome: "Primeiro", categoria: "Investimentos", valor: 0.1, data: "2026-01-01" },
+  { id: "2", nome: "Segundo", categoria: "Investimentos", valor: 0.2, data: "2026-01-01" },
+ ];
+ assert.equal(total(bens), 0.3);
+ assert.equal(porCategoria(bens)[0].valor, 0.3);
+ const atualizado = atualizarBem(bens[0], { ...bens[0], valor: 0.3 });
+ assert.equal(ultimaVariacao(atualizado)?.diferenca, 0.2);
+});
+
 
 test("mantém avaliação anterior somente quando valor ou data mudam", () => {
  const original: Bem = { id: "1", nome: "Casa", categoria: "Imóveis", valor: 600000, data: "2026-01-01" };

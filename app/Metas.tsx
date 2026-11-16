@@ -28,7 +28,7 @@ export default function Metas({ bens, metas, onChange }: { bens: Bem[]; metas: M
  }
  return <section className="card goal"><div><div className="eyebrow"><span/> UM PLANO PARA O FUTURO</div><h2>Seus planos, no seu ritmo.</h2><p>Crie objetivos e, quando desejar, defina quanto de cada bem associar. A associação é apenas um planejamento.</p></div>
  {metas.map(meta => {
-  const valor = meta.destinacoes.reduce((s,d) => s + d.valor, 0);
+  const valor = meta.destinacoes.reduce((s,d) => s + Math.round(d.valor * 100), 0) / 100;
   const precisaRevisao = metaPrecisaRevisao(meta, bens, metas);
   const cenarios = aportes[meta.id] ?? ["", ""];
   return <article className="goal-result" key={meta.id}>

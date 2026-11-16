@@ -1,19 +1,30 @@
 import { categorias, dataValida, type Bem } from "./patrimonio";
 import type { Meta } from "./metas";
 type Dados = { bens: Bem[]; metas: Meta[]; tranquila: boolean };
+function valorMonetarioValido(valor: unknown): valor is number {
+ if (typeof valor !== "number" || !Number.isFinite(valor) || valor <= 0) return false;
+ const centavos = valor * 100;
+ return Number.isSafeInteger(Math.round(centavos)) && Math.abs(centavos - Math.round(centavos)) < 1e-7;
+}
 export function lerBackup(texto: string): Dados {
  const arquivo = JSON.parse(texto);
  const d = arquivo?.dados;
  if (arquivo?.formato !== "nexus-club-backup" || arquivo?.versao !== 1 || !d || !Array.isArray(d.bens) || !Array.isArray(d.metas) || typeof d.tranquila !== "boolean") throw new Error("Formato de cópia inválido ou não reconhecido.");
  const ids = new Set<string>();
  for (const b of d.bens) {
-  if (!b || typeof b.id !== "string" || !b.id || ids.has(b.id) || typeof b.nome !== "string" || !b.nome.trim() || !categorias.includes(b.categoria) || typeof b.valor !== "number" || !Number.isFinite(b.valor) || b.valor <= 0 || typeof b.data !== "string" || !dataValida(b.data)) throw new Error("A cópia contém um bem inválido.");
+  if (!b || typeof b.id !== "string" || !b.id || ids.has(b.id) || typeof b.nome !== "string" || !b.nome.trim() || !categorias.includes(b.categoria) || !valorMonetarioValido(b.valor) || typeof b.data !== "string" || !dataValida(b.data)) throw new Error("A cópia contém um bem inválido.");
   ids.add(b.id);
-  if (b.historico !== undefined && (!Array.isArray(b.historico) || !b.historico.every((a: { valor: number; data: string }) => typeof a?.valor === "number" && Number.isFinite(a.valor) && a.valor > 0 && typeof a.data === "string" && dataValida(a.data)))) throw new Error("A cópia contém um histórico inválido.");
+  if (b.historico !== undefined && (!Array.isArray(b.historico) || !b.historico.every((a: { valor: number; data: string }) => valorMonetarioValido(a?.valor) && typeof a.data === "string" && dataValida(a.data)))) throw new Error("A cópia contém um histórico inválido.");
  }
  const idsMetas = new Set<string>();
  for (const m of d.metas) {
-  if (!m || typeof m.id !== "string" || !m.id || idsMetas.has(m.id) || typeof m.nome !== "string" || !m.nome.trim() || typeof m.valor !== "number" || !Number.isFinite(m.valor) || m.valor <= 0 || !Array.isArray(m.destinacoes) || !m.destinacoes.every((a: { bemId: string; valor: number }) => typeof a?.bemId === "string" && !!a.bemId && typeof a.valor === "number" && Number.isFinite(a.valor) && a.valor > 0)) throw new Error("A cópia contém uma meta inválida.");
+  if (!m || typeof m.id !== "string" || !m.id || idsMetas.has(m.id) || typeof m.nome !== "string" || !m.nome.trim() || !valorMonetarioValido(m.valor) || !Array.isArray(m.destinacoes)) throw new Error("A cópia contém uma meta inválida.");
+  const bensDestinados = new Set<string>();
+  if (!m.destinacoes.every((a: { bemId: string; valor: number }) => {
+   if (typeof a?.bemId !== "string" || !a.bemId || bensDestinados.has(a.bemId) || !valorMonetarioValido(a.valor)) return false;
+   bensDestinados.add(a.bemId);
+   return true;
+  })) throw new Error("A cópia contém uma meta inválida.");
   idsMetas.add(m.id);
  }
  return { bens: d.bens, metas: d.metas, tranquila: d.tranquila };

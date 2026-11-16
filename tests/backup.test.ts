@@ -15,3 +15,13 @@ test("rejeita datas inexistentes no bem e no histórico sem rejeitar ano bissext
  assert.throws(() => lerBackup(arquivo({...bem,data:"2025-02-29"})), /bem inválido/);
  assert.throws(() => lerBackup(arquivo({...bem,historico:[{valor:100,data:"2026-02-30"}]})), /histórico inválido/);
 });
+
+test("rejeita valores com fração de centavo e associações duplicadas", () => {
+ const arquivo = (dados: object) => JSON.stringify({formato:"nexus-club-backup",versao:1,dados});
+ const dados = {bens:[{id:"1",nome:"Casa",categoria:"Imóveis",valor:200,data:"2026-01-01"}],metas:[],tranquila:true};
+ assert.throws(() => lerBackup(arquivo({...dados,bens:[{...dados.bens[0],valor:0.001}]})), /bem inválido/);
+ assert.throws(() => lerBackup(arquivo({...dados,bens:[{...dados.bens[0],valor:Number.MAX_SAFE_INTEGER}]})), /bem inválido/);
+ const meta = {id:"m",nome:"Meta",valor:100,destinacoes:[{bemId:"1",valor:0.001}]};
+ assert.throws(() => lerBackup(arquivo({...dados,metas:[meta]})), /meta inválida/);
+ assert.throws(() => lerBackup(arquivo({...dados,metas:[{...meta,destinacoes:[{bemId:"1",valor:10},{bemId:"1",valor:20}]}]})), /meta inválida/);
+});

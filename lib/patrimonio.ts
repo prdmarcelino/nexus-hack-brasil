@@ -9,7 +9,7 @@ export function atualizarBem(anterior: Bem, novo: Bem): Bem {
 }
 export function ultimaVariacao(bem: Bem): { anterior: Avaliacao; diferenca: number } | null {
   const anterior = bem.historico?.at(-1);
-  return anterior ? { anterior, diferenca: bem.valor - anterior.valor } : null;
+  return anterior ? { anterior, diferenca: (Math.round(bem.valor * 100) - Math.round(anterior.valor * 100)) / 100 } : null;
 }
 export const exemplo: Bem[] = [
   { id: "1", nome: "Investimentos de longo prazo", categoria: "Investimentos", valor: 145000, data: "2026-11-01" },
@@ -17,7 +17,7 @@ export const exemplo: Bem[] = [
   { id: "3", nome: "Veículo", categoria: "Veículos", valor: 48000, data: "2026-10-01" },
   { id: "4", nome: "Reserva financeira", categoria: "Investimentos", valor: 32000, data: "2026-11-01" },
 ];
-export function total(bens: Bem[]): number { return bens.reduce((soma, bem) => soma + bem.valor, 0); }
+export function total(bens: Bem[]): number { return bens.reduce((soma, bem) => soma + Math.round(bem.valor * 100), 0) / 100; }
 export function porCategoria(bens: Bem[]): { categoria: Categoria; valor: number }[] {
   return categorias.map(categoria => ({ categoria, valor: total(bens.filter(b => b.categoria === categoria)) })).filter(item => item.valor > 0);
 }
