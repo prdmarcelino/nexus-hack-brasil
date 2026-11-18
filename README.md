@@ -2,7 +2,9 @@
 
 Protótipo web para a trilha 05 — Pagamentos e finanças — do Hack Brasil 2026. A proposta é ajudar pessoas a acompanhar diferentes tipos de patrimônio com uma experiência tranquila, adequada a quem prefere não acompanhar as oscilações diárias do mercado.
 
-**Estado:** protótipo local. Com login, o patrimônio é carregado do Supabase local e as alterações são salvas automaticamente no banco local, com indicador de estado e detecção de conflitos. O banco local mantém até 20 versões confirmadas, acessíveis pelo proprietário em Conta. O acesso à interface exige login; contas novas começam vazias e podem carregar exemplos fictícios na página Conta. Uma cópia JSON pode ser baixada e restaurada diretamente no banco da conta, mediante confirmação. Dados anteriores no navegador são removidos apenas quando idênticos a dados confirmados no banco; outras cópias antigas são preservadas. Não há cotações nem recomendações de investimento.
+[Abrir a demonstração do nexus.club](https://nexushackbrasil.shardweb.app)
+
+A aplicação está publicada na ShardCloud e usa o projeto Supabase do Hack para login e dados. O ambiente de desenvolvimento usa o Supabase local. As alterações são salvas automaticamente na conta, com indicador de estado e detecção de conflitos. O banco mantém até 20 versões confirmadas, acessíveis pelo proprietário em Conta. O acesso à interface exige login; contas novas começam vazias e podem carregar exemplos fictícios na página Conta. Uma cópia JSON pode ser baixada e restaurada diretamente no banco da conta, mediante confirmação. Dados anteriores no navegador são removidos apenas quando idênticos a dados confirmados no banco; outras cópias antigas são preservadas. Não há cotações nem recomendações de investimento.
 
 ## Documentação
 
@@ -25,7 +27,7 @@ pnpm install
 pnpm dev
 ```
 
-Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` em `.env.local` com os valores do projeto Supabase local. Nunca publique a chave privilegiada ou o arquivo de ambiente. Abra http://localhost:3000. Para verificar os cálculos e compilar para produção, execute `pnpm test` e `pnpm build`. A demo online e o vídeo ainda não foram publicados. A [licença proprietária limitada](LICENSE) é uma minuta pendente de identificação do titular, revisão e confirmação da organização; prevê acesso para avaliação do Hack e reserva os demais direitos.
+Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` em `.env.local` com os valores do projeto Supabase local. Nunca publique a chave privilegiada ou o arquivo de ambiente. Abra http://localhost:3000. Para verificar os cálculos e compilar para produção, execute `pnpm test` e `pnpm build`. O vídeo de apresentação está pendente. A [licença proprietária limitada](LICENSE) é uma minuta pendente de identificação do titular, revisão e confirmação da organização; prevê acesso para avaliação do Hack e reserva os demais direitos.
 
 ## Testar o percurso da demonstração
 

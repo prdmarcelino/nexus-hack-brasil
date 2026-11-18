@@ -11,8 +11,8 @@
 - **Implementação atual:** aplicação web responsiva com Next.js, React, TypeScript e Supabase; informações fornecidas manualmente e salvamento no banco configurado. A disponibilidade de funções depende do ambiente implantado.
 - **Limites:** o app não possui cotações automáticas e não oferece recomendação de investimento. Valores e projeções não garantem resultados; a demonstração deve usar dados fictícios.
 - **Repositório:** https://github.com/prdmarcelino/nexus-hack-brasil
-- **Demo HTTPS:** pendente.
+- **Demo HTTPS:** [Abrir o nexus.club](https://nexushackbrasil.shardweb.app).
 - **Vídeo HTTPS de até 3 minutos, sem login:** pendente.
-- **Acesso do júri:** conta de demonstração fictícia e instruções pendentes; não publicar credenciais privilegiadas.
+- **Acesso do júri:** conta fictícia preparada e testada. Fornecer as instruções de acesso ao júri no canal previsto para a avaliação.
 
 A pessoa responsável pelo envio deve revisar o texto, o estado dos links, a licença e as condições vigentes e aceitar o regulamento em nome do time. O prazo informado pelo regulamento consultado é 30/11/2026 às 23h59, horário de Brasília.

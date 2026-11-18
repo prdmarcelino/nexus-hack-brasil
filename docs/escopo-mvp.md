@@ -8,4 +8,4 @@ Escopo implementado no protótipo local:
 4. Criar metas com valores destinados por bem e simular prazo com aportes mensais, sem rendimentos.
 5. Disponibilizar interface responsiva, roteiro de uso e testes dos cálculos. O vídeo de até três minutos ainda precisa ser produzido.
 
-A autenticação e o salvamento no Supabase estão implementados e foram testados localmente; a aplicação hospedada ainda precisa ser implantada e validada. Integração com bancos e corretoras, cotações automáticas, impostos, pagamento e assinatura não estão implementados.
+A autenticação e o salvamento no Supabase foram testados localmente e na aplicação hospedada na ShardCloud. Integração com bancos e corretoras, cotações automáticas, impostos, pagamento e assinatura não estão implementados.
