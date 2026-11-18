@@ -1,11 +1,6 @@
-import { categorias, dataValida, type Bem } from "./patrimonio";
+import { categorias, dataValida, valorMonetarioValido, type Bem } from "./patrimonio";
 import type { Meta } from "./metas";
 type Dados = { bens: Bem[]; metas: Meta[]; tranquila: boolean };
-function valorMonetarioValido(valor: unknown): valor is number {
- if (typeof valor !== "number" || !Number.isFinite(valor) || valor <= 0) return false;
- const centavos = valor * 100;
- return Number.isSafeInteger(Math.round(centavos)) && Math.abs(centavos - Math.round(centavos)) < 1e-7;
-}
 export function lerBackup(texto: string): Dados {
  const arquivo = JSON.parse(texto);
  const d = arquivo?.dados;

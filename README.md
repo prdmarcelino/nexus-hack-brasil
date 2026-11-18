@@ -26,3 +26,9 @@ pnpm dev
 ```
 
 Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` em `.env.local` com os valores do projeto Supabase local. Nunca publique a chave privilegiada ou o arquivo de ambiente. Abra http://localhost:3000. Para verificar os cálculos e compilar para produção, execute `pnpm test` e `pnpm build`. A demo online e o vídeo ainda não foram publicados. A [licença proprietária limitada](LICENSE) é uma minuta pendente de identificação do titular, revisão e confirmação da organização; prevê acesso para avaliação do Hack e reserva os demais direitos.
+
+## Testar o percurso da demonstração
+
+Com as migrations aplicadas, execute `pnpm build` e `pnpm start` apontando para o Supabase local de teste. Em outro terminal, configure `TEST_URL` e `TEST_KEY` com a URL e a chave publicável desse mesmo banco. Com a aplicação em `http://localhost:3000`, execute `pnpm test:fluxo`.
+
+O teste cria uma conta fictícia com endereço único no banco local. A configuração local deve permitir cadastro sem confirmação de e-mail. No Windows o teste usa o Microsoft Edge instalado. Em outros sistemas, instale o navegador do Playwright com `pnpm exec playwright install chromium`.

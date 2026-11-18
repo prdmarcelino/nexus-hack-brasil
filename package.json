@@ -22,6 +22,7 @@
     "build": "next build",
     "start": "next start",
     "test": "tsx --test tests/*.test.ts",
+    "test:fluxo": "node tests/fluxo-autosalvamento.cjs",
     "supabase:start": "supabase start --network-id nexus-hack-local",
     "supabase:stop": "supabase stop"
   },

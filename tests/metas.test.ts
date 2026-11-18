@@ -29,6 +29,7 @@ test("resume somente valores válidos sem contar bens removidos ou distribuir ma
 test("rejeita valores inválidos, duplicados e bens inexistentes", () => {
  assert.equal(validarDestinacoes(bens,metas,[]), null);
  assert.ok(validarDestinacoes(bens,metas,[{bemId:"a",valor:-1}]));
+ assert.ok(validarDestinacoes(bens,metas,[{bemId:"a",valor:1.001}]));
  assert.ok(validarDestinacoes(bens,metas,[{bemId:"ausente",valor:1}]));
  assert.ok(validarDestinacoes(bens,metas,[{bemId:"a",valor:1},{bemId:"a",valor:1}]));
 });

@@ -25,3 +25,13 @@ test("rejeita valores com fração de centavo e associações duplicadas", () =>
  assert.throws(() => lerBackup(arquivo({...dados,metas:[meta]})), /meta inválida/);
  assert.throws(() => lerBackup(arquivo({...dados,metas:[{...meta,destinacoes:[{bemId:"1",valor:10},{bemId:"1",valor:20}]}]})), /meta inválida/);
 });
+
+test("preserva centavos de avaliações altas e rejeita quantias que arredondariam a zero", () => {
+ const bem = { id: "1", nome: "Imóvel fictício", categoria: "Imóveis", valor: 10000000.12, data: "2026-11-18" };
+ const dados = { bens: [bem], metas: [], tranquila: true };
+ const arquivo = (valor: number) => JSON.stringify({
+  formato: "nexus-club-backup", versao: 1, dados: { ...dados, bens: [{ ...bem, valor }] },
+ });
+ assert.deepEqual(lerBackup(arquivo(bem.valor)), dados);
+ assert.throws(() => lerBackup(arquivo(1e-10)), /bem inválido/);
+});

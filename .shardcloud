@@ -1,0 +1,7 @@
+DISPLAY_NAME=nexus.club Hack Brasil
+MAIN=package.json
+LANGUAGE=node
+MEMORY=2048
+VERSION=recommended
+SUBDOMAIN=nexushackbrasil
+CUSTOM_COMMAND=npx --yes pnpm@10.33.2 install --frozen-lockfile --prod=false && npm run build && npm start -- -p 80

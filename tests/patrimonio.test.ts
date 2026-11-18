@@ -44,6 +44,8 @@ test("estima meses sem rendimento, arredondando para cima", () => {
  assert.equal(mesesParaMeta(500, 1000, 0), null);
  assert.equal(mesesParaMeta(0, 1000, -1), null);
  assert.equal(mesesParaMeta(0.1, 0.3, 0.1), 2);
+ assert.equal(mesesParaMeta(0, 1, 0.015), null);
+ assert.equal(mesesParaMeta(0, 1, 1e30), null);
 });
 
 

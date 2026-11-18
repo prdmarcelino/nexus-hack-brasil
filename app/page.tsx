@@ -4,7 +4,7 @@ import { useDados } from "./DadosProvider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Check, CircleHelp, Download, Eye, EyeOff, House, Leaf, UserRound, Pencil, Plus, RotateCcw, ShieldCheck, Sparkles, Trash2, Wallet, X } from "lucide-react";
-import { Bem, Categoria, categorias, exemplo, moeda, porCategoria, total, atualizarBem, ultimaVariacao, avaliacaoAntiga, bensParaRevisao } from "../lib/patrimonio";
+import { Bem, Categoria, categorias, exemplo, moeda, porCategoria, total, atualizarBem, ultimaVariacao, avaliacaoAntiga, bensParaRevisao, dataValida, valorMonetarioValido } from "../lib/patrimonio";
 
 import Metas from "./Metas";
 import Conta from "./Conta";
@@ -65,8 +65,8 @@ export default function Home() {
  const grupos = porCategoria(bens); const soma = total(bens); const resumo = resumoDestinacoes(bens, metas); const revisoes = hojeLocal ? bensParaRevisao(bens, hojeLocal) : [];
  function adicionar(e: React.FormEvent) {
   e.preventDefault(); const quantia = Number(valor);
-  if (!nome.trim() || !Number.isFinite(quantia) || quantia <= 0 || !data) { setErro("Preencha o nome, uma data e um valor maior que zero."); return; }
-  const bem = { id: editando ?? crypto.randomUUID(), nome: nome.trim(), categoria, valor: Math.round(quantia * 100) / 100, data };
+  if (!nome.trim() || !dataValida(data) || !valorMonetarioValido(quantia)) { setErro("Confira o nome, a data e o valor do bem. Use um valor positivo com até duas casas decimais."); return; }
+  const bem = { id: editando ?? crypto.randomUUID(), nome: nome.trim(), categoria, valor: quantia, data };
   if (editando && Math.round(destinadoAoBem(metas, editando) * 100) > Math.round(bem.valor * 100) && !window.confirm("O novo valor é menor que o total destinado às metas. A distribuição ficará excedida até você revisá-la. Deseja continuar?")) return;
   setBens(editando ? bens.map(item => item.id === editando ? atualizarBem(item, bem) : item) : [...bens, bem]);
   fechar();
