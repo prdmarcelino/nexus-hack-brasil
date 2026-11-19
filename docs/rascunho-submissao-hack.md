@@ -11,7 +11,7 @@
 - **Implementação atual:** aplicação web responsiva com Next.js, React, TypeScript e Supabase; informações fornecidas manualmente e salvamento no banco configurado. A disponibilidade de funções depende do ambiente implantado.
 - **Limites:** o app não possui cotações automáticas e não oferece recomendação de investimento. Valores e projeções não garantem resultados; a demonstração deve usar dados fictícios.
 - **Repositório:** https://github.com/prdmarcelino/nexus-hack-brasil
-- **Demo HTTPS:** [Abrir o nexus.club](https://nexushackbrasil.shardweb.app).
+- **Demo HTTPS:** [Abrir o nexus.club](https://usenexus.shardweb.app).
 - **Vídeo HTTPS de até 3 minutos, sem login:** pendente.
 - **Acesso do júri:** conta fictícia preparada e testada. Fornecer as instruções de acesso ao júri no canal previsto para a avaliação.
 

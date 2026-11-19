@@ -2,7 +2,7 @@
 
 Protótipo web para a trilha 05 — Pagamentos e finanças — do Hack Brasil 2026. A proposta é ajudar pessoas a acompanhar diferentes tipos de patrimônio com uma experiência tranquila, adequada a quem prefere não acompanhar as oscilações diárias do mercado.
 
-[Abrir a demonstração do nexus.club](https://nexushackbrasil.shardweb.app)
+[Abrir a demonstração do nexus.club](https://usenexus.shardweb.app)
 
 A aplicação está publicada na ShardCloud e usa o projeto Supabase do Hack para login e dados. O ambiente de desenvolvimento usa o Supabase local. As alterações são salvas automaticamente na conta, com indicador de estado e detecção de conflitos. O banco mantém até 20 versões confirmadas, acessíveis pelo proprietário em Conta. O acesso à interface exige login; contas novas começam vazias e podem carregar exemplos fictícios na página Conta. Uma cópia JSON pode ser baixada e restaurada diretamente no banco da conta, mediante confirmação. Dados anteriores no navegador são removidos apenas quando idênticos a dados confirmados no banco; outras cópias antigas são preservadas. Não há cotações nem recomendações de investimento.
 

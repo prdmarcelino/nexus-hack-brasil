@@ -1,6 +1,6 @@
 # Preparação para avaliação do Hack Brasil
 
-Atualizado em 18/11/2026. Consulte o [regulamento oficial](https://hackbrasil.com/regulamento) e o painel do evento antes da submissão.
+Atualizado em 19/11/2026. Consulte o [regulamento oficial](https://hackbrasil.com/regulamento) e o painel do evento antes da submissão.
 
 ## Cronograma interno definido pelo responsável
 
@@ -13,6 +13,7 @@ O regulamento registrado prevê regras adicionais de congelamento do repositóri
 
 ## Situação
 
+- Em 19/11, o projeto passou a usar a [demo em usenexus.shardweb.app](https://usenexus.shardweb.app) no plano Basic de 2 GB. A ShardCloud recebeu a versão da `main` pelo GitHub. O painel está configurado para reiniciar a aplicação após cada deploy dessa branch.
 - Em 18/11, a aplicação foi publicada na ShardCloud a partir do ZIP do commit `ca09de6` da `main`. O painel não estava conectado ao GitHub. A demo passou pelo teste de login, edição, recarga e simulação de meta em uma sessão de navegador separada. [Abrir a demo](https://nexushackbrasil.shardweb.app)
 - A aplicação funciona localmente com Supabase em Docker. O projeto Supabase hospedado separado foi criado e recebeu as quatro migrations em 9/11/2026; não recebeu dados pessoais nem cópia do banco local. O projeto foi reativado em 18/11 e a API respondeu com os exemplos fictícios.
 - A interface exige login. A conta isolada de avaliação foi preparada com quatro bens e duas metas fictícias. Entregar as instruções de acesso ao júri pelo canal da avaliação. O vídeo deve ser acessível sem login.
@@ -34,7 +35,7 @@ O regulamento registrado prevê regras adicionais de congelamento do repositóri
 1. No painel da ShardCloud, escolha **Basic, 2 GB, cobrança mensal** para uma aplicação Node.js. O plano custa R$ 11,90 por mês na [tabela consultada em 18/11](https://shardcloud.app/pt-br/pricing). O projeto existente em supabase.com fornece o banco, o login e a API. O subdomínio HTTPS da hospedagem atende à demonstração.
 2. Em **Config → Integrations**, conecte o GitHub e selecione o repositório `prdmarcelino/nexus-hack-brasil`. Na aplicação, abra **Deploys** e escolha a branch `main` e a raiz do repositório. [Guia de integração](https://docs.shardcloud.app/tutorials/platform/git-integration)
 3. Nas variáveis da aplicação, configure `NEXT_PUBLIC_SUPABASE_URL` com a URL do projeto do Hack e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` com a **chave publicável** desse mesmo projeto. Salve antes de compilar. Se a primeira compilação começou antes da configuração, solicite um novo deploy para incorporar os valores ao frontend.
-4. A configuração em `.shardcloud` solicita 2 GB, instala as dependências do lockfile, compila a aplicação e inicia o Next.js na porta 80. Verifique nos logs o fim do build e a inicialização do servidor. O subdomínio solicitado é `nexushackbrasil`. Use a URL HTTPS efetivamente atribuída pelo painel. [Guia de Next.js](https://docs.shardcloud.app/tutorials/website/nextjs)
+4. A configuração em `.shardcloud` solicita 2 GB, instala as dependências do lockfile, compila a aplicação e inicia o Next.js na porta 80. No painel, configure `PNPM_MAX_WORKERS=1` e `npm_config_network_concurrency=2` para limitar o consumo de memória durante a instalação. Confira nos logs a inicialização e abra a [demo em HTTPS](https://usenexus.shardweb.app).
 5. No Supabase do Hack, ajuste **Authentication → URL Configuration → Site URL** para essa URL. Abra-a em janela anônima, entre com a conta fictícia do júri e confira se os exemplos carregam. Altere um bem fictício, aguarde a confirmação do salvamento e recarregue a tela. Registre o link no rascunho de submissão depois da validação.
 
 ## Verificações registradas
